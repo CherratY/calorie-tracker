@@ -1,16 +1,11 @@
 import {
   useEffect,
-  useRef,
-  useState
+  useRef
 } from "react";
 
 import {
   BrowserMultiFormatReader
 } from "@zxing/browser";
-
-import {
-  getFoodByBarcode
-} from "../services/openFoodFacts";
 
 
 export default function ScannerModal({
@@ -22,71 +17,74 @@ export default function ScannerModal({
 
   const readerRef = useRef(null);
 
-  const [loading, setLoading] =
-    useState(false);
-
 
   useEffect(() => {
 
-    let active = true;
+    const codeReader =
+      new BrowserMultiFormatReader();
+
+    readerRef.current =
+      codeReader;
 
 
-    async function startScanner() {
+    async function startCamera() {
 
-      if (!videoRef.current) return;
+      try {
 
+        await codeReader.decodeFromVideoDevice(
 
-      const reader =
-        new BrowserMultiFormatReader();
+          undefined,
 
+          videoRef.current,
 
-      readerRef.current = reader;
-
-
-      await reader.decodeFromVideoDevice(
-
-        undefined,
-
-        videoRef.current,
-
-        async (result) => {
+          (result, error) => {
 
 
-          if (
-            result &&
-            active
-          ) {
-            
-  console.log("BARCODE FOUND:", result.text);
+            if(result) {
+
+              console.log(
+                "BARCODE:",
+                result.text
+              );
+
+
+              // temporary test
+              alert(
+                "Barcode detected: "
+                + result.text
+              );
+
+
+            }
 
 
           }
 
-        }
+        );
 
-      );
+
+      } catch(error) {
+
+        console.error(
+          error
+        );
+
+      }
 
     }
 
 
-    startScanner();
+    startCamera();
 
 
     return () => {
 
-      active = false;
-
-
-      if (readerRef.current) {
-
-        readerRef.current.reset();
-
-      }
+      codeReader.reset();
 
     };
 
 
-  }, [onFoodFound]);
+  }, []);
 
 
 
@@ -104,10 +102,6 @@ export default function ScannerModal({
 
         ref={videoRef}
 
-        style={{
-          width:"100%"
-        }}
-
         autoPlay
 
         muted
@@ -117,18 +111,10 @@ export default function ScannerModal({
       />
 
 
-      {
-        loading &&
-
-        <p>
-          Searching food...
-        </p>
-
-      }
-
-
       <button
-        onClick={close}
+        onClick={()=>{
+          close();
+        }}
       >
         Close
       </button>
