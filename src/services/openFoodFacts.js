@@ -2,32 +2,19 @@ export async function getFoodByBarcode(barcode) {
 
   try {
 
-    console.log(
-      "Searching barcode:",
-      barcode
+    const response = await fetch(
+      `https://world.openfoodfacts.org/api/v2/product/${barcode}.json`
     );
-
-
-    const response =
-      await fetch(
-        `https://world.openfoodfacts.org/api/v2/product/${barcode}.json`
-      );
 
 
     const data =
       await response.json();
 
 
-    console.log(
-      "Food API:",
-      data
-    );
-
-
     if(data.status !== 1){
 
       console.log(
-        "Food not found"
+        "Product not found"
       );
 
       return null;
@@ -43,7 +30,7 @@ export async function getFoodByBarcode(barcode) {
 
       name:
         product.product_name ||
-        "Unknown food",
+        "Unknown product",
 
 
       calories:
@@ -53,29 +40,29 @@ export async function getFoodByBarcode(barcode) {
 
 
       protein:
-        Math.round(
+        Number(
           product.nutriments?.proteins_100g || 0
         ),
 
 
       carbs:
-        Math.round(
+        Number(
           product.nutriments?.carbohydrates_100g || 0
         ),
 
 
       fat:
-        Math.round(
+        Number(
           product.nutriments?.fat_100g || 0
         )
 
     };
 
 
-  } catch(error){
+  } catch(error) {
 
     console.error(
-      "Food API ERROR:",
+      "Open Food Facts error:",
       error
     );
 

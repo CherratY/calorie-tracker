@@ -4,6 +4,9 @@ import {
   BrowserMultiFormatReader
 } from "@zxing/browser";
 
+import {
+  getFoodByBarcode
+} from "../services/openFoodFacts";
 
 export default function ScannerModal({
   close,
@@ -31,7 +34,7 @@ export default function ScannerModal({
 
       videoRef.current,
 
-      (result, error, controls) => {
+      async (result, error, controls) => {
 
 
         if (controls) {
@@ -69,7 +72,12 @@ export default function ScannerModal({
 
           if(onFoodFound){
 
-            onFoodFound(barcode);
+            const food =
+              await getFoodByBarcode(barcode);
+
+            if(food){
+              onFoodFound(food);
+            }
 
           }
 

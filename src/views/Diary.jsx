@@ -246,7 +246,7 @@ close={() =>
 }
 
 
-onFoodFound={(barcode)=>{
+onFoodFound={(food)=>{
 
 
 const updated = [
@@ -259,17 +259,15 @@ const updated = [
 
     meal,
 
-    food: "Scanned product",
+    food: food.name,
 
-    barcode,
+    calories: food.calories,
 
-    calories: 0,
+    protein: food.protein,
 
-    protein: 0,
+    carbs: food.carbs,
 
-    carbs: 0,
-
-    fat: 0
+    fat: food.fat
 
   }
 
