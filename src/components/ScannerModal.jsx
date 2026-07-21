@@ -56,24 +56,9 @@ export default function ScannerModal({
             result &&
             active
           ) {
+            
+  console.log("BARCODE FOUND:", result.text);
 
-            setLoading(true);
-
-
-            const food =
-              await getFoodByBarcode(
-                result.text
-              );
-
-
-            if (food) {
-
-              onFoodFound(food);
-
-            }
-
-
-            setLoading(false);
 
           }
 
