@@ -19,6 +19,8 @@ export default function ScannerModal({
 
   useEffect(() => {
 
+    detectedRef.current = false;
+
     const reader =
       new BrowserMultiFormatReader();
 

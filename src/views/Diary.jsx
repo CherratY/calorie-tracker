@@ -241,11 +241,51 @@ setScanner(true)
 
     <ScannerModal
 
-      close={() =>
-        setScanner(false)
-      }
+close={() =>
+  setScanner(false)
+}
 
-    />
+
+onFoodFound={(barcode)=>{
+
+
+const updated = [
+
+  ...diary,
+
+  {
+
+    id: Date.now(),
+
+    meal,
+
+    food: "Scanned product",
+
+    barcode,
+
+    calories: 0,
+
+    protein: 0,
+
+    carbs: 0,
+
+    fat: 0
+
+  }
+
+];
+
+
+saveDiary(updated);
+
+setDiary(updated);
+
+setScanner(false);
+
+
+}}
+
+/>
 
   )
 }
