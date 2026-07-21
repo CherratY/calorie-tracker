@@ -1,11 +1,10 @@
-import {
-  useEffect,
-  useRef
-} from "react";
+import { useEffect, useRef } from "react";
 
 import {
-  BrowserMultiFormatReader
-} from "@zxing/browser";
+  BrowserMultiFormatReader,
+  BarcodeFormat,
+  DecodeHintType
+} from "@zxing/library";
 
 
 export default function ScannerModal({
@@ -14,16 +13,30 @@ export default function ScannerModal({
 
   const videoRef = useRef(null);
 
-  const readerRef = useRef(null);
+  const controlsRef = useRef(null);
 
 
   useEffect(() => {
 
+
+    const hints = new Map();
+
+
+    hints.set(
+      DecodeHintType.POSSIBLE_FORMATS,
+      [
+        BarcodeFormat.EAN_13,
+        BarcodeFormat.EAN_8,
+        BarcodeFormat.UPC_A,
+        BarcodeFormat.UPC_E
+      ]
+    );
+
+
     const reader =
-      new BrowserMultiFormatReader();
-
-
-    readerRef.current = reader;
+      new BrowserMultiFormatReader(
+        hints
+      );
 
 
     reader.decodeFromVideoDevice(
@@ -32,16 +45,31 @@ export default function ScannerModal({
 
       videoRef.current,
 
-      (result, error) => {
+      (result, error, controls) => {
 
-        if (result) {
+
+        if(controls){
+
+          controlsRef.current =
+            controls;
+
+        }
+
+
+        if(result){
 
           console.log(
-            "FOUND:",
-            result.text
+            "FOUND BARCODE:",
+            result.getText()
+          );
+
+
+          alert(
+            result.getText()
           );
 
         }
+
 
       }
 
@@ -50,7 +78,11 @@ export default function ScannerModal({
 
     return () => {
 
-      reader.reset();
+      if(controlsRef.current){
+
+        controlsRef.current.stop();
+
+      }
 
     };
 
@@ -69,26 +101,34 @@ export default function ScannerModal({
 
 
       <video
+
         ref={videoRef}
+
         autoPlay
+
         muted
+
         playsInline
+
       />
 
 
       <button
+
         type="button"
-        onClick={() => {
 
-          if(readerRef.current){
+        onClick={()=>{
+          
+          if(controlsRef.current){
 
-            readerRef.current.reset();
+            controlsRef.current.stop();
 
           }
 
           close();
 
         }}
+
       >
         Close
       </button>
