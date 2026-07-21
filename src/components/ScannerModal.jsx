@@ -1,42 +1,26 @@
 import { useEffect, useRef } from "react";
 
 import {
-  BrowserMultiFormatReader,
-  BarcodeFormat,
-  DecodeHintType
-} from "@zxing/library";
+  BrowserMultiFormatReader
+} from "@zxing/browser";
 
 
 export default function ScannerModal({
-  close
+  close,
+  onFoodFound
 }) {
 
   const videoRef = useRef(null);
 
   const controlsRef = useRef(null);
 
+  const detectedRef = useRef(false);
+
 
   useEffect(() => {
 
-
-    const hints = new Map();
-
-
-    hints.set(
-      DecodeHintType.POSSIBLE_FORMATS,
-      [
-        BarcodeFormat.EAN_13,
-        BarcodeFormat.EAN_8,
-        BarcodeFormat.UPC_A,
-        BarcodeFormat.UPC_E
-      ]
-    );
-
-
     const reader =
-      new BrowserMultiFormatReader(
-        hints
-      );
+      new BrowserMultiFormatReader();
 
 
     reader.decodeFromVideoDevice(
@@ -48,7 +32,7 @@ export default function ScannerModal({
       (result, error, controls) => {
 
 
-        if(controls){
+        if (controls) {
 
           controlsRef.current =
             controls;
@@ -56,17 +40,37 @@ export default function ScannerModal({
         }
 
 
-        if(result){
+        if (result && !detectedRef.current) {
+
+
+          detectedRef.current = true;
+
+
+          const barcode =
+            result.getText();
+
 
           console.log(
-            "FOUND BARCODE:",
-            result.getText()
+            "BARCODE FOUND:",
+            barcode
           );
 
 
-          alert(
-            result.getText()
-          );
+          // stop camera immediately
+
+          if(controlsRef.current){
+
+            controlsRef.current.stop();
+
+          }
+
+
+          if(onFoodFound){
+
+            onFoodFound(barcode);
+
+          }
+
 
         }
 
@@ -91,9 +95,24 @@ export default function ScannerModal({
 
 
 
+  function handleClose(){
+
+    if(controlsRef.current){
+
+      controlsRef.current.stop();
+
+    }
+
+    close();
+
+  }
+
+
+
   return (
 
     <div className="scanner">
+
 
       <h2>
         Scan Barcode
@@ -117,17 +136,7 @@ export default function ScannerModal({
 
         type="button"
 
-        onClick={()=>{
-          
-          if(controlsRef.current){
-
-            controlsRef.current.stop();
-
-          }
-
-          close();
-
-        }}
+        onClick={handleClose}
 
       >
         Close
