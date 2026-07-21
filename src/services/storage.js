@@ -44,7 +44,13 @@ export function getDiary(){
   }
 
 
-  return diary.meals;
+  return diary.meals.map(item => ({
+    ...item,
+    calories: Number(item.calories) || 0,
+    protein: Number(item.protein) ||0,
+    carbs: Number(item.carbs) ||0,
+    fat: Number(item.fat) || 0
+  }));
 
 }
 
@@ -148,5 +154,72 @@ export function getHistory(){
     )
 
   ) || [];
+
+}
+
+export function getSettings(){
+
+  const saved =
+    localStorage.getItem(
+      "settings"
+    );
+
+
+  return saved
+    ? JSON.parse(saved)
+    : {
+
+        calories: 2000,
+
+        protein: 150,
+
+        carbs: 250,
+
+        fat: 70
+
+      };
+
+}
+
+export function saveSettings(settings){
+
+  localStorage.setItem(
+
+    "settings",
+
+    JSON.stringify(settings)
+
+  );
+
+}
+
+const WEIGHTS_KEY = "weights";
+
+
+export function getWeights(){
+
+  const saved =
+    localStorage.getItem(
+      WEIGHTS_KEY
+    );
+
+
+  return saved
+    ? JSON.parse(saved)
+    : [];
+
+}
+
+
+
+export function saveWeights(weights){
+
+  localStorage.setItem(
+
+    WEIGHTS_KEY,
+
+    JSON.stringify(weights)
+
+  );
 
 }

@@ -10,38 +10,39 @@ export default function Home() {
 
   const settings =
     getSettings();
+const calories =
+  diary.reduce(
+    (sum, item) =>
+      sum +
+      (Number(item.calories) || 0),
+    0
+  );
 
-  const calories =
-    diary.reduce(
-      (sum, item) =>
-        sum +
-        item.calories,
-      0
-    );
+const protein =
+  diary.reduce(
+    (sum, item) =>
+      sum +
+      (Number(item.protein) || 0),
+    0
+  );
 
-  const protein =
-    diary.reduce(
-      (sum, item) =>
-        sum +
-        item.protein,
-      0
-    );
 
-  const carbs =
-    diary.reduce(
-      (sum, item) =>
-        sum +
-        item.carbs,
-      0
-    );
+const carbs =
+  diary.reduce(
+    (sum, item) =>
+      sum +
+      (Number(item.carbs) || 0),
+    0
+  );
 
-  const fat =
-    diary.reduce(
-      (sum, item) =>
-        sum +
-        item.fat,
-      0
-    );
+
+const fat =
+  diary.reduce(
+    (sum, item) =>
+      sum +
+      (Number(item.fat) || 0),
+    0
+  );
 
   return (
     <div className="page">
@@ -56,7 +57,7 @@ export default function Home() {
 
         <h1>
           {
-            settings.goalCalories -
+            settings.calories -
             calories
           }
         </h1>
@@ -72,7 +73,7 @@ export default function Home() {
         <p>
           {calories} /
           {
-            settings.goalCalories
+            settings.calories
           }
         </p>
 
