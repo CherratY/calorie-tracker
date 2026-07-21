@@ -1,58 +1,152 @@
-const SETTINGS_KEY = "ct_settings";
-const DIARY_KEY = "ct_diary";
-const WEIGHT_KEY = "ct_weights";
+const DIARY_KEY = "currentDiary";
+const HISTORY_KEY = "diaryHistory";
 
 
-export function getSettings() {
-  return JSON.parse(
-    localStorage.getItem(SETTINGS_KEY)
-  ) || {
-    age: 21,
-    gender: "male",
-    weight: 84,
-    height: 180,
-    activity: 1.55,
-    goalCalories: 2500,
-    goalWeight: 75
+function today(){
+
+  return new Date()
+    .toISOString()
+    .split("T")[0];
+
+}
+
+
+
+export function getDiary(){
+
+  const saved =
+    localStorage.getItem(
+      DIARY_KEY
+    );
+
+
+  if(!saved){
+
+    return createNewDay();
+
+  }
+
+
+  const diary =
+    JSON.parse(saved);
+
+
+  // new day detected
+
+  if(diary.date !== today()){
+
+
+    saveHistory(diary);
+
+
+    return createNewDay();
+
+  }
+
+
+  return diary.meals;
+
+}
+
+
+
+
+function createNewDay(){
+
+  const newDiary = {
+
+    date: today(),
+
+    meals: []
+
   };
-}
 
 
-export function saveSettings(settings) {
   localStorage.setItem(
-    SETTINGS_KEY,
-    JSON.stringify(settings)
-  );
-}
 
-
-export function getDiary() {
-  return JSON.parse(
-    localStorage.getItem(DIARY_KEY)
-  ) || [];
-}
-
-
-export function saveDiary(diary) {
-  localStorage.setItem(
     DIARY_KEY,
-    JSON.stringify(diary)
+
+    JSON.stringify(newDiary)
+
   );
+
+
+  return [];
+
 }
 
 
-// WEIGHT TRACKING
-
-export function getWeights() {
-  return JSON.parse(
-    localStorage.getItem(WEIGHT_KEY)
-  ) || [];
-}
 
 
-export function saveWeights(weights) {
+
+export function saveDiary(meals){
+
+
+  const data = {
+
+    date: today(),
+
+    meals
+
+  };
+
+
   localStorage.setItem(
-    WEIGHT_KEY,
-    JSON.stringify(weights)
+
+    DIARY_KEY,
+
+    JSON.stringify(data)
+
   );
+
+
+}
+
+
+
+
+
+function saveHistory(day){
+
+
+  const history =
+    JSON.parse(
+
+      localStorage.getItem(
+        HISTORY_KEY
+      )
+
+    ) || [];
+
+
+
+  history.push(day);
+
+
+
+  localStorage.setItem(
+
+    HISTORY_KEY,
+
+    JSON.stringify(history)
+
+  );
+
+
+}
+
+
+
+
+
+export function getHistory(){
+
+  return JSON.parse(
+
+    localStorage.getItem(
+      HISTORY_KEY
+    )
+
+  ) || [];
+
 }
