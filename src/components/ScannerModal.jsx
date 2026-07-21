@@ -20,71 +20,64 @@ export default function ScannerModal({
 
   useEffect(() => {
 
-    const codeReader =
+    const reader =
       new BrowserMultiFormatReader();
 
-    readerRef.current =
-      codeReader;
+
+    readerRef.current = reader;
 
 
-    async function startCamera() {
+    reader.decodeFromVideoDevice(
 
-      try {
+      undefined,
 
-        await codeReader.decodeFromVideoDevice(
+      videoRef.current,
 
-          undefined,
+      (result, error) => {
 
-          videoRef.current,
+        if(result){
 
-          (result, error) => {
+          console.log(
+            "BARCODE:",
+            result.text
+          );
 
-
-            if(result) {
-
-              console.log(
-                "BARCODE:",
-                result.text
-              );
-
-
-              // temporary test
-              alert(
-                "Barcode detected: "
-                + result.text
-              );
-
-
-            }
-
-
-          }
-
-        );
-
-
-      } catch(error) {
-
-        console.error(
-          error
-        );
+        }
 
       }
 
-    }
-
-
-    startCamera();
+    );
 
 
     return () => {
 
-      codeReader.reset();
+      if(readerRef.current){
+
+        readerRef.current.reset();
+
+      }
 
     };
 
 
   }, []);
+
+
+
+  function handleClose(){
+
+    // stop camera first
+
+    if(readerRef.current){
+
+      readerRef.current.reset();
+
+    }
+
+
+    close();
+
+  }
 
 
 
@@ -112,9 +105,7 @@ export default function ScannerModal({
 
 
       <button
-        onClick={()=>{
-          close();
-        }}
+        onClick={handleClose}
       >
         Close
       </button>

@@ -236,7 +236,7 @@ setScanner(true)
       })}
 
     {
-scanner &&
+scanner ? (
 
 <ScannerModal
 
@@ -252,7 +252,7 @@ onFoodFound={(food)=>{
   }
 }}
 />
-
+) : null
 }
     </div>
   );
