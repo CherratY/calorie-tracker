@@ -9,7 +9,6 @@ import {
 
 
 export default function ScannerModal({
-  onFoodFound,
   close
 }) {
 
@@ -35,10 +34,10 @@ export default function ScannerModal({
 
       (result, error) => {
 
-        if(result){
+        if (result) {
 
           console.log(
-            "BARCODE:",
+            "FOUND:",
             result.text
           );
 
@@ -51,11 +50,7 @@ export default function ScannerModal({
 
     return () => {
 
-      if(readerRef.current){
-
-        readerRef.current.reset();
-
-      }
+      reader.reset();
 
     };
 
@@ -64,27 +59,9 @@ export default function ScannerModal({
 
 
 
-  function handleClose(){
-
-    // stop camera first
-
-    if(readerRef.current){
-
-      readerRef.current.reset();
-
-    }
-
-
-    close();
-
-  }
-
-
-
   return (
 
     <div className="scanner">
-
 
       <h2>
         Scan Barcode
@@ -92,20 +69,26 @@ export default function ScannerModal({
 
 
       <video
-
         ref={videoRef}
-
         autoPlay
-
         muted
-
         playsInline
-
       />
 
 
       <button
-        onClick={handleClose}
+        type="button"
+        onClick={() => {
+
+          if(readerRef.current){
+
+            readerRef.current.reset();
+
+          }
+
+          close();
+
+        }}
       >
         Close
       </button>

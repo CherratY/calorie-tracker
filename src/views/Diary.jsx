@@ -236,23 +236,18 @@ setScanner(true)
       })}
 
     {
-scanner ? (
 
-<ScannerModal
+  scanner && (
 
-close={()=>
-setScanner(false)
-}
+    <ScannerModal
 
-onFoodFound={(food)=>{
+      close={() =>
+        setScanner(false)
+      }
 
-  if(!food){
-  setScanner(false);
-  return;
-  }
-}}
-/>
-) : null
+    />
+
+  )
 }
     </div>
   );
