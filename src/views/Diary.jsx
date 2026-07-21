@@ -246,31 +246,10 @@ setScanner(false)
 
 onFoodFound={(food)=>{
 
-  const updated = [
-    ...diary,
-    {
-      id: Date.now(),
-      meal,
-      food: food.name,
-      calories: food.calories || 0,
-      protein: food.protein || 0,
-      carbs: food.carbs || 0,
-      fat: food.fat || 0
-    }
-  ];
-
-  saveDiary(updated);
-
-  setDiary(updated);
-
-  setFood("");
-  setCalories("");
-  setProtein("");
-  setCarbs("");
-  setFat("");
-
+  if(!food){
   setScanner(false);
-
+  return;
+  }
 }}
 />
 
