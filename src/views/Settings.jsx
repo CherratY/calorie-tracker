@@ -42,7 +42,7 @@ export default function Settings() {
       goalCalories: tdee
     });
 
-    alert("Saved");
+    console.log("Saved");
   };
 
   return (

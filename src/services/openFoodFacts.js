@@ -26,7 +26,7 @@ export async function getFoodByBarcode(barcode) {
 
     if(data.status !== 1){
 
-      alert(
+      console.log(
         "Food not found"
       );
 
